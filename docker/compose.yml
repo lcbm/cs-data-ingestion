@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+
+  redis:
+    image: bitnami/redis:6.0
+    env_file: "env.d/redis.env"
+    volumes:
+      - redis-data:/bitnami/redis
+    deploy:
+      replicas: 1
+
+  postgresql:
+    image: bitnami/postgresql:13.1.0
+    env_file: "env.d/postgresql.env"
+    volumes:
+      - postgresql-data:/bitnami/postgresql
+    deploy:
+      replicas: 1
+
+  airflow-scheduler:
+    image: bitnami/airflow-scheduler:1.10.13
+    env_file: "env.d/airflow.env"
+    depends_on:
+      - redis
+      - postgresql
+    volumes:
+      - airflow-scheduler-data:/bitnami/airflow-scheduler
+      - ../airflow/dags:/opt/bitnami/airflow/dags
+      - ../data:/opt/bitnami/airflow/csv
+    deploy:
+      replicas: 1
+
+  airflow-worker:
+    image: bitnami/airflow-worker:1.10.13
+    env_file: "env.d/airflow.env"
+    depends_on:
+      - redis
+      - postgresql
+    volumes:
+      - airflow-worker-data:/bitnami/airflow-worker
+      - ../airflow/dags:/opt/bitnami/airflow/dags
+      - ../data:/opt/bitnami/airflow/csv
+    deploy:
+      replicas: 1
+
+  airflow:
+    image: bitnami/airflow:1.10.13
+    env_file: "env.d/airflow.env"
+    depends_on:
+      - airflow-scheduler
+      - airflow-worker
+    ports:
+      - "8080:8080"
+    volumes:
+      - airflow-data:/bitnami/airflow
+      - ../airflow/dags:/opt/bitnami/airflow/dags
+      - ../data:/opt/bitnami/airflow/csv
+    deploy:
+      replicas: 1
+
+volumes:
+  redis-data: ~
+  postgresql-data: ~
+  airflow-scheduler-data: ~
+  airflow-worker-data: ~
+  airflow-data: ~
