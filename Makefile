@@ -24,7 +24,7 @@ clean-all: clean
 	@rm -r $(VENV)
 
 format: clean
-	@poetry run black .
+	@poetry run black $(AIRFLOW)
 
 lint:
-	@poetry run flake8 .
+	@poetry run flake8 $(AIRFLOW)
