@@ -17,7 +17,11 @@ default_args = {
 }
 
 with DAG(dag_id="load_rehabilitation_data", default_args=default_args) as dag:
-    Task_I = PostgresOperator(
+    Task_I = PythonOperator(
+        task_id="setup_connection", python_callable=utils.setup_connection
+    )
+
+    Task_II = PostgresOperator(
         task_id="database_setup",
         postgres_conn_id="postgres_custom",
         database="airflow",
@@ -26,7 +30,7 @@ with DAG(dag_id="load_rehabilitation_data", default_args=default_args) as dag:
         """,
     )
 
-    Task_II = PostgresOperator(
+    Task_III = PostgresOperator(
         task_id="create_table",
         postgres_conn_id="postgres_custom",
         database="airflow",
@@ -47,9 +51,9 @@ with DAG(dag_id="load_rehabilitation_data", default_args=default_args) as dag:
         """,
     )
 
-    Task_III = PythonOperator(
+    Task_IV = PythonOperator(
         task_id="copy_csv_to_postgres", python_callable=utils.copy_csv_to_postgres
     )
 
 
-Task_I >> Task_II >> Task_III
+Task_I >> Task_II >> Task_III >> Task_IV

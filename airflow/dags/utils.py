@@ -1,6 +1,10 @@
 import csv
 
+from airflow.hooks.base_hook import BaseHook
 from airflow.hooks.postgres_hook import PostgresHook
+from airflow.models import Connection
+
+from airflow import settings
 
 SESSIONS_TABLE_COLUMN_TYPE_MAP = {
     0: int,
@@ -13,6 +17,23 @@ SESSIONS_TABLE_COLUMN_TYPE_MAP = {
     7: float,
     8: str,
 }
+
+
+def setup_connection():
+    session = settings.Session()
+    try:
+        BaseHook.get_connection("postgres_custom")
+    except Exception:
+        connection = Connection(
+            conn_id="postgres_custom",
+            conn_type="Postgres",
+            host="postgresql",
+            login="airflow",
+            password="airflow",
+            port=5432,
+        )
+        session.add(connection)
+        session.commit()
 
 
 def copy_csv_to_postgres():
