@@ -1,11 +1,13 @@
 # 📝 Data Ingestion Proof of Concept
 
-This repository contains the specification for the _**third deliverable of the 'Projects' class**_. Currently, the services are organized as a [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack in `compose.yml`.
+This repository contains the specification for the _**third deliverable of the 'Projects' class**_. Currently, the services are organized as [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack in `compose.yml` and the infrastructure is organized in [Terraform](https://www.terraform.io) files in `terraform/`.
 
 ## Contents
 
 - [Development](#development)
 - [Deploying the Stack](#deploying-the-stack)
+  - [Terraform](#terraform)
+  - [Docker](#docker)
 - [Contributing](#contributing)
 - [LICENSE](#license)
 
@@ -15,6 +17,7 @@ To install the **development pre-requisites**, please follow the instructions in
 
 - [Python 3.8](https://www.python.org/downloads/)
 - [Poetry](https://github.com/python-poetry/poetry#installation)
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 ### Installing development dependencies
 
@@ -32,7 +35,66 @@ $ make bootstrap
 
 ## Deploying the Stack
 
-### Requirements
+If you wish to deploy the stack locally, jump to the [Docker](#docker) section. If you wish to deploy the services to AWS, on the other hand, continue to the [Terraform](#terraform) section.
+
+### Terraform
+
+Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently. Terraform can manage existing and popular service providers by generating an execution plan describing what it will do to reach the desired state (described in the project's Terraform files), and then executes it to build the described infrastructure. As the configuration changes, Terraform is able to determine what changed and create incremental execution plans which can be applied. For this project, the infrastructure is deployed to [AWS](aws.amazon.com).
+
+#### Configuring AWS Credentials
+
+Follow the instructions in AWS CLI [documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) to configure your AWS account locally. After that, update the variable `profile` to point to your account profile.
+
+#### Deploying Infrastructure
+
+After you're done configuring your AWS profiles, change your current working directory to where `Terraform` files are located and initialize it:
+
+```bash
+# change current working directory
+$ cd terraform
+
+# prepares the current working directory for use
+$ terraform init
+```
+
+Now, apply the changes required to reach the desired state of the configuration described in the Terraform files. Make sure to correctly reference your [SSH Key Pair](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys-2) or else Terraform won't be able to deploy the project's services:
+
+```bash
+# applies required changes and passes the SSH key pair as parameters
+$ terraform apply -var 'key_name=key' -var 'public_key_path=~/.ssh/key.pub'
+```
+
+>**_Note:_** Make sure the output for `SSH Agent` is `true`: `SSH Agent: true`. In case it isn't, please run `$ eval "$(ssh-agent -s)"` and `$ ssh-add ~/.ssh/key` and try again. Also, `key` should actually be the SSH file from `public_key_path` (but without the `.pub` at the end).
+
+At this point, if the project was deployed correctly, you should be able to access the following resources:
+
+- [Airflow Webserver](https://airflow.apache.org) UI at `http://<aws_instance.web.public_ip>:8080`
+- [Flask](https://flask.palletsprojects.com) frontend at `http://<aws_instance.web.public_ip>:5000`
+
+>**_Note:_** <aws_instance.web.public_ip> is the final output of the `$ terraform apply ...` command.
+
+Besides the available resources, you may also SSH into the deployed machine at any time:
+
+```bash
+# connect to provisioned instance via SSH
+$ ssh -i ~/.ssh/key.pub ubuntu@<aws_instance.web.public_ip>
+```
+
+In case you are having problems, you may want to look at [Hashicorp's Terraform AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs).
+
+#### Wrapping up
+
+Once you're done, you may remove what was created by `terraform apply`:
+
+```bash
+# change current working directory
+$ cd terraform
+
+# destroys the Terraform-managed infrastructure
+$ terraform destroy
+```
+
+### Docker
 
 Considering that the stack is organized as a [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack, the following dependencies must be installed:
 
@@ -40,7 +102,7 @@ Considering that the stack is organized as a [Docker swarm](https://docs.docker.
 
 >**_NOTE_**: If you're using a Linux system, please take a look at [Docker's post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/)!
 
-### Setup
+#### Setup
 
 Once you have `Docker` installed, pull the Docker images of the services used by the stack:
 
@@ -62,7 +124,7 @@ Finally, update the `env.d` files for each service with the appropriate configur
 
 >**_NOTE_**: in order to generate a [fernet key](https://airflow.readthedocs.io/en/stable/howto/secure-connections.html) for Airflow, please take a look [here](https://beau.click/airflow/fernet-key).
 
-### Initialize Swarm mode
+#### Initialize Swarm mode
 
 In your deployment machine, initialize Docker Swarm mode:
 
@@ -73,7 +135,7 @@ $ docker swarm init
 
 > **_Note:_**  For more information on what is Swarm and its key concepts, please refer to [Docker's documentation](https://docs.docker.com/engine/swarm/key-concepts/).
 
-### Deploying services
+#### Deploying services
 
 Now that the deployment machine is in swarm mode, deploy the stack:
 
@@ -82,7 +144,7 @@ Now that the deployment machine is in swarm mode, deploy the stack:
 $ docker stack deploy -c compose.yml cs-data-ingestion
 ```
 
-### Verifying the Stack's Status
+#### Verifying the Stack's Status
 
 Check if all the services are running and have **exactly one** replica:
 
@@ -110,7 +172,7 @@ At this point, the following resources will be available to you:
 
 >**_NOTE:_**  In case `localhost` doesn't work, you may try `http://0.0.0.0:<port>` instead.
 
-### Logging
+#### Logging
 
 In order to check a service's logs, use the following command:
 
@@ -121,7 +183,7 @@ $ docker service logs <service_name>
 
 >**_NOTE:_**  You may also follow the log output in realtime with the `--follow` option (e.g. `docker service logs --follow cs-data-ingestion_airflow`). For more information on service logs, refer to [Docker's documentation](https://docs.docker.com/engine/reference/commandline/service_logs/).
 
-### Wrapping up
+#### Wrapping up
 
 Once you're done, you may remove what was created by `docker swarm init`:
 
