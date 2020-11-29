@@ -26,8 +26,8 @@ services:
       - postgresql
     volumes:
       - airflow-scheduler-data:/bitnami/airflow-scheduler
-      - ../airflow/dags:/opt/bitnami/airflow/dags
-      - ../data:/opt/bitnami/airflow/csv
+      - ./airflow/dags:/opt/bitnami/airflow/dags
+      - ./data:/opt/bitnami/airflow/csv
     deploy:
       replicas: 1
 
@@ -39,8 +39,8 @@ services:
       - postgresql
     volumes:
       - airflow-worker-data:/bitnami/airflow-worker
-      - ../airflow/dags:/opt/bitnami/airflow/dags
-      - ../data:/opt/bitnami/airflow/csv
+      - ./airflow/dags:/opt/bitnami/airflow/dags
+      - ./data:/opt/bitnami/airflow/csv
     deploy:
       replicas: 1
 
@@ -54,8 +54,8 @@ services:
       - "8080:8080"
     volumes:
       - airflow-data:/bitnami/airflow
-      - ../airflow/dags:/opt/bitnami/airflow/dags
-      - ../data:/opt/bitnami/airflow/csv
+      - ./airflow/dags:/opt/bitnami/airflow/dags
+      - ./data:/opt/bitnami/airflow/csv
     deploy:
       replicas: 1
 

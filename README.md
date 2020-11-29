@@ -1,6 +1,6 @@
 # 📝 Data Ingestion Proof of Concept
 
-This repository contains the specification for the _**third deliverable of the 'Projects' class**_. Currently, the services are organized as a [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack in compose-like files (located in the `cs-data-ingestion/docker` directory).
+This repository contains the specification for the _**third deliverable of the 'Projects' class**_. Currently, the services are organized as a [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack in `compose.yml`.
 
 ## Contents
 
@@ -34,7 +34,7 @@ $ make bootstrap
 
 ### Requirements
 
-Considering that the stack is organized as a [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack in compose-like files (located in the `cs-data-ingestion/docker` directory), the following dependencies must be installed:
+Considering that the stack is organized as a [Docker swarm](https://docs.docker.com/engine/swarm/key-concepts/) stack, the following dependencies must be installed:
 
 - [Docker](https://docs.docker.com/get-docker/)
 
@@ -49,7 +49,7 @@ Once you have `Docker` installed, pull the Docker images of the services used by
 $ make docker-pull
 ```
 
-Finally, update the `docker/env.d` files for each service with the appropriate configurations, credentials, and any other necessary information.
+Finally, update the `env.d` files for each service with the appropriate configurations, credentials, and any other necessary information.
 
 >**_NOTE_**: in order to generate a [fernet key](https://airflow.readthedocs.io/en/stable/howto/secure-connections.html) for Airflow, please take a look [here](https://beau.click/airflow/fernet-key).
 
@@ -66,12 +66,9 @@ $ docker swarm init
 
 ### Deploying services
 
-After following the previous steps, ensure you are in the `docker` stack directory and then deploy the stack:
+Now that the deployment machine is in swarm mode, deploy the stack:
 
 ```bash
-# change current working directory
-$ cd docker
-
 # deploys/updates the stack from the specified file
 $ docker stack deploy -c compose.yml cs-data-ingestion
 ```
