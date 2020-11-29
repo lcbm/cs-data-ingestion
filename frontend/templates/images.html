@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Imagens</title>
+</head>
+<body>
+    <section class="row">
+        {% for image in images %}
+          <section class="col-md-4 col-sm-6" style="background-color: white;">
+            <image src="{{url_for('static',filename=image)}}"></image>
+          </section>
+        {% endfor %}
+      </section>
+</body>
+</html>

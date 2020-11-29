@@ -6,7 +6,7 @@ authors = ["Leonardo Melo <lcbm@cesar.school>"]
 license = "ISC"
 readme = "README.md"
 repository = "https://github.com/lcbm/cs-data-ingestion"
-keywords = ["airflow", "docker", "poetry"]
+keywords = ["airflow", "flask", "docker", "poetry"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -27,7 +27,7 @@ include_trailing_comma = true
 lines_after_imports = 2
 lines_between_types = 1
 use_parentheses = true
-src_paths = ["airflow"]
+src_paths = ["airflow", "frontend"]
 filter_files = true
 
 [tool.black]

@@ -14,6 +14,12 @@ docker-pull:
 	@docker pull bitnami/airflow-worker:1.10.13
 	@docker pull bitnami/airflow:1.10.13
 
+docker-build:
+	@docker build . -f frontend/Dockerfile -t cs-data-ingestion:frontend
+
+docker-build-dev:
+	@docker build . -f frontend/Dockerfile-dev -t cs-data-ingestion:frontend
+
 clean:
 	@find . -type d -name '.mypy_cache' -exec rm -rf {} +
 	@find . -type d -name '__pycache__' -exec rm -rf {} +

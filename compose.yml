@@ -59,9 +59,20 @@ services:
     deploy:
       replicas: 1
 
+  frontend:
+    image: cs-data-ingestion:frontend
+    env_file: "env.d/frontend.env"
+    volumes:
+      - frontend-data:/cs-data-ingestion/frontend
+    ports:
+      - "5000:5000"
+    deploy:
+      replicas: 1
+
 volumes:
   redis-data: ~
   postgresql-data: ~
   airflow-scheduler-data: ~
   airflow-worker-data: ~
   airflow-data: ~
+  frontend-data: ~

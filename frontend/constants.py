@@ -1,0 +1,38 @@
+""" Declaration of constants. """
+import os
+
+
+BASEDIR = os.path.abspath(os.path.dirname(__name__))
+STATIC_DIR_PATH = f"{BASEDIR}/frontend/static"
+
+REPORT_FILE_NAME = "report.csv"
+REPORT_FILE_PATH = f"{STATIC_DIR_PATH}/{REPORT_FILE_NAME}"
+
+REPORT_COLUMN_PATIENT_ID = "patient_id"
+REPORT_COLUMN_ENVIRONMENT_ID = "environment_id"
+REPORT_COLUMN_ACTIVITY_ID = "activity_id"
+REPORT_COLUMN_SESSION = "session"
+REPORT_COLUMN_FRAME = "frame"
+REPORT_COLUMN_X = "x"
+REPORT_COLUMN_Y = "y"
+REPORT_COLUMN_Z = "z"
+REPORT_COLUMN_TIMESTAMP = "timestamp"
+
+REPORT_COLUMNS_AXIS = [
+    REPORT_COLUMN_X,
+    REPORT_COLUMN_Y,
+    REPORT_COLUMN_Z,
+]
+
+REPORT_COLUMNS_TYPE_MAP = {
+    REPORT_COLUMN_PATIENT_ID: int,
+    REPORT_COLUMN_ENVIRONMENT_ID: int,
+    REPORT_COLUMN_ACTIVITY_ID: int,
+    REPORT_COLUMN_SESSION: int,
+    REPORT_COLUMN_FRAME: int,
+    REPORT_COLUMN_X: float,
+    REPORT_COLUMN_Y: float,
+    REPORT_COLUMN_Z: float,
+    REPORT_COLUMN_TIMESTAMP: str,
+}
+REPORT_COLUMNS = REPORT_COLUMNS_TYPE_MAP.keys()
