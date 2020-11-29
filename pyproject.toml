@@ -11,7 +11,8 @@ keywords = ["airflow", "docker", "poetry"]
 [tool.poetry.dependencies]
 python = "^3.8"
 pre-commit = "^2.9.2"
-apache-airflow = "^1.10.13"
+apache-airflow = "1.10.12"
+psutil = "5.7.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
