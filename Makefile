@@ -7,13 +7,6 @@ bootstrap:
 	@poetry install
 	@$(PRE_COMMIT) install
 
-docker-pull:
-	@docker pull bitnami/redis:6.0
-	@docker pull bitnami/postgresql:13.1.0
-	@docker pull bitnami/airflow-scheduler:1.10.13
-	@docker pull bitnami/airflow-worker:1.10.13
-	@docker pull bitnami/airflow:1.10.13
-
 docker-build:
 	@docker build . -f frontend/Dockerfile -t cs-data-ingestion:frontend
 

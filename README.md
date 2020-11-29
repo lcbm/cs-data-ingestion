@@ -104,14 +104,7 @@ Considering that the stack is organized as a [Docker swarm](https://docs.docker.
 
 #### Setup
 
-Once you have `Docker` installed, pull the Docker images of the services used by the stack:
-
-```bash
-# fetches services' docker images
-$ make docker-pull
-```
-
-Now, build the missing Docker images with the followin command:
+Once you have `Docker` installed, build the Docker images of the services used by the stack:
 
 ```bash
 # builds services' docker images
@@ -157,17 +150,11 @@ You should see something like this:
 
 ```text
 ID                  NAME                            MODE                REPLICAS            IMAGE                               PORTS
-9n8ldih68jnk        cs-data-ingestion_redis               replicated          1/1                 bitnami/redis:6.0
-f49nmgkv3v9i        cs-data-ingestion_airflow             replicated          1/1                 bitnami/airflow:1.10.13             *:8080->8080/tcp
-fxe80mcl98si        cs-data-ingestion_postgresql          replicated          1/1                 bitnami/postgresql:13.1.0
-ii6ak931z3so        cs-data-ingestion_airflow-scheduler   replicated          1/1                 bitnami/airflow-scheduler:1.10.13
-vaa3lkoq133d        cs-data-ingestion_airflow-worker      replicated          1/1                 bitnami/airflow-worker:1.10.13
 ipsdstxfvnpl        cs-data-ingestion_frontend            replicated          1/1                 cs-data-ingestion:frontend          *:5000->5000/tcp
 ```
 
 At this point, the following resources will be available to you:
 
-- [Airflow Webserver](https://airflow.apache.org) UI is available at `http://localhost:8080`
 - [Flask](https://flask.palletsprojects.com) frontend is available at `http://localhost:5000/v1/render/images`
 
 >**_NOTE:_**  In case `localhost` doesn't work, you may try `http://0.0.0.0:<port>` instead.
