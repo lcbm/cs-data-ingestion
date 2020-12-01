@@ -35,12 +35,5 @@ def create():
     unique_sessions = df[constants.REPORT_COLUMN_SESSION].unique()
     for session in unique_sessions:
         plot.genered_2d_line_graph_png(df, constants.REPORT_COLUMN_SESSION, session)
-        next_session = session + 1
-        if next_session not in unique_sessions:
-            break
-
-        plot.generate_3d_line_graph_gif(
-            df, constants.REPORT_COLUMN_SESSION, session, next_session
-        )
 
     return flask.redirect(flask.url_for("render_v1.images"))
